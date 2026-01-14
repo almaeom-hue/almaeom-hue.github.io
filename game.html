@@ -8,17 +8,34 @@
     <style>
         :root { --main-bg: #fdfaf5; --point-green: #7c8e6a; --text-black: #2c2c2c; }
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--main-bg); color: var(--text-black); }
+        
         nav { display: flex; justify-content: center; padding: 30px; background: transparent; }
-        nav a { margin: 0 20px; text-decoration: none; color: #888; font-weight: 500; }
+        nav a { margin: 0 20px; text-decoration: none; color: #888; font-weight: 500; transition: 0.3s; }
         nav a:hover, nav a.active { color: var(--point-green); font-weight: 700; }
-        .section-container { max-width: 600px; margin: 60px auto; padding: 0 20px; }
+
+        .section-container { max-width: 600px; margin: 60px auto; padding: 0 20px; animation: fadeIn 1s; }
         .content-card { background: white; padding: 50px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.02); text-align: center; }
+        
+        h2 { font-family: 'Nanum Myeongjo', serif; font-size: 2rem; margin-bottom: 10px; }
         .progress-bar { width: 100%; height: 4px; background: #eee; margin: 30px 0; border-radius: 2px; }
         .progress-fill { height: 100%; background: var(--point-green); width: 25%; transition: 0.5s; }
-        .q-btn { width: 100%; padding: 20px; border: 1px solid #eee; background: white; border-radius: 15px; cursor: pointer; margin-bottom: 15px; transition: 0.3s; }
-        .q-btn:hover { background: #fdfaf5; border-color: var(--point-green); color: var(--point-green); }
+
+        #q-text { font-size: 1.25rem; font-weight: 500; margin-bottom: 40px; word-break: keep-all; }
+        .ans-zone { display: flex; flex-direction: column; gap: 10px; }
+        
+        .q-btn { 
+            width: 100%; padding: 20px; border: 1px solid #eee; background: white; 
+            border-radius: 15px; cursor: pointer; transition: 0.3s; font-size: 1rem; 
+        }
+        .q-btn:hover { background: #fdfaf5; border-color: var(--point-green); color: var(--point-green); transform: translateY(-2px); }
+
         #res-zone { display: none; }
-        #res-title { font-size: 2rem; color: var(--point-green); margin: 20px 0; font-family: 'Nanum Myeongjo'; }
+        .res-badge { display: inline-block; padding: 5px 15px; background: #f4f7f0; color: var(--point-green); border-radius: 20px; font-size: 0.9rem; margin-bottom: 20px; }
+        #res-title { font-size: 2.2rem; color: var(--point-green); margin-bottom: 20px; font-family: 'Nanum Myeongjo', serif; }
+        #res-desc { color: #666; line-height: 1.8; margin-bottom: 30px; word-break: keep-all; }
+        .retry-btn { background: none; border: none; color: #aaa; text-decoration: underline; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -29,57 +46,85 @@
         <a href="curriculum.html">평가안내</a>
         <a href="game.html" class="active">인생책찾기</a>
     </nav>
+
     <div class="section-container">
         <div class="content-card">
             <div id="q-zone">
-                <h2 style="font-family:'Nanum Myeongjo'">나의 인생 고전 찾기</h2>
+                <h2>나의 인생 고전은...</h2>
                 <div class="progress-bar"><div class="progress-fill" id="pb"></div></div>
-                <p id="q-text" style="font-size:1.2rem; margin-bottom:30px;"></p>
-                <div id="ans-zone"></div>
+                <p id="q-text"></p>
+                <div id="ans-zone" class="ans-zone"></div>
             </div>
+
             <div id="res-zone">
-                <p>당신을 위한 독서 처방전</p>
+                <div class="res-badge">당신을 위한 독서 처방전</div>
                 <h2 id="res-title"></h2>
-                <p id="res-desc" style="line-height:1.7; color:#666;"></p>
-                <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; text-decoration:underline; cursor:pointer; color:#999;">다시 하기</button>
+                <p id="res-desc"></p>
+                <button class="retry-btn" onclick="location.reload()">테스트 다시 하기</button>
             </div>
         </div>
     </div>
+
     <script>
         const questions = [
-            { q: "요즘 나의 시선이 머무는 곳은?", a: [{t: "나의 내면과 성장", v: "A"}, {t: "공동체와 세상", v: "B"}] },
-            { q: "더 끌리는 이야기 방식은?", a: [{t: "문학적 상상력", v: "1"}, {t: "논리적 인문학", v: "2"}] },
-            { q: "토론하고 싶은 주제는?", a: [{t: "인간의 본성", v: "X"}, {t: "사회적 정의", v: "Y"}] },
-            { q: "얻고 싶은 배움은?", a: [{t: "나의 삶에 대한 성찰", v: "S"}, {t: "세상을 바꾸는 통찰", v: "T"}] }
+            { q: "요즘 나의 관심사는?", a: [{t: "나 자신의 내면과 성장", v: "A"}, {t: "우리가 사는 사회와 공동체", v: "B"}] },
+            { q: "어떤 방식의 이야기를 좋아하나요?", a: [{t: "감동이 있는 문학적 서사", v: "1"}, {t: "지적 자극을 주는 인문 지식", v: "2"}] },
+            { q: "토론할 때 중요하게 생각하는 것은?", a: [{t: "서로의 마음을 나누는 공감", v: "X"}, {t: "날카로운 통찰과 논리", v: "Y"}] },
+            { q: "독서 프로젝트를 통해 얻고 싶은 결과는?", a: [{t: "삶에 대한 따뜻한 위로", v: "S"}, {t: "세상을 보는 넓은 시야", v: "T"}] }
         ];
+
+        // 10권의 도서 매칭 테이블 (조합별로 골고루 배치)
         const results = {
             "A1XS": { t: "어린 왕자", d: "관계의 소중함과 순수한 시선을 되찾고 싶은 당신에게 추천합니다." },
             "A1YS": { t: "데미안", d: "자아를 깨고 나오는 성장의 기쁨을 느끼고 싶은 당신에게 딱 맞아요." },
-            "B2YT": { t: "사피엔스", d: "인류의 역사를 통해 세상을 보는 시야를 넓히고 싶은 당신께 추천합니다." },
-            "B2XT": { t: "침묵의 봄", d: "환경 문제에 대한 경각심과 사회적 실천을 고민하는 당신의 필독서입니다." }
-            // ... (나머지 코드들도 내부적으로 매칭되도록 구성됨)
+            "A1XX": { t: "모모", d: "시간의 소중함과 '진짜 듣기'의 의미를 생각해보게 하는 따뜻한 판타지입니다." },
+            "A2XS": { t: "숨결이 바람 될 때", d: "삶과 죽음의 문턱에서 인간다움이 무엇인지 깊이 성찰하게 하는 에세이입니다." },
+            "A2YS": { t: "나의 가해자들에게", d: "개인의 상처를 직시하고 사회적 목소리를 내는 용기를 얻고 싶다면 추천합니다." },
+            "B1XT": { t: "모두가 앉아 있는 곳", d: "현대 사회의 타인에 대한 시선과 공감을 소설로 만나보고 싶은 당신에게 추천합니다." },
+            "B1YT": { t: "멋진 신세계", d: "미래 과학 기술이 가져올 사회적 변화에 대해 날카로운 토론을 즐기는 분께 추천해요." },
+            "B2YT": { t: "사피엔스", d: "인류의 거대한 역사를 통해 세상을 보는 넓은 시야를 갖고 싶은 당신의 필독서입니다." },
+            "B2XT": { t: "침묵의 봄", d: "환경 문제에 대한 경각심과 사회적 실천을 고민하는 당신에게 추천합니다." },
+            "B2YS": { t: "정의란 무엇인가", d: "공동체의 도덕적 딜레마를 논리적으로 풀어가고 싶은 당신께 추천합니다." }
         };
-        let cur = 0; let code = "";
+
+        let current = 0;
+        let code = "";
+
         function load() {
-            if(cur >= 4) {
-                document.getElementById('q-zone').style.display='none';
-                document.getElementById('res-zone').style.display='block';
-                const r = results[code] || results["A1XS"];
-                document.getElementById('res-title').innerText = r.t;
-                document.getElementById('res-desc').innerText = r.d;
+            if (current >= questions.length) {
+                showResult();
                 return;
             }
-            document.getElementById('pb').style.width = ((cur+1)*25) + "%";
-            document.getElementById('q-text').innerText = questions[cur].q;
-            const az = document.getElementById('ans-zone'); az.innerHTML = "";
-            questions[cur].a.forEach(ans => {
-                const btn = document.createElement('button'); btn.className = 'q-btn'; btn.innerText = ans.t;
-                btn.onclick = () => { code += ans.v; cur++; load(); };
+            document.getElementById('pb').style.width = ((current + 1) * 25) + "%";
+            document.getElementById('q-text').innerText = questions[current].q;
+            const az = document.getElementById('ans-zone');
+            az.innerHTML = "";
+            questions[current].a.forEach(ans => {
+                const btn = document.createElement('button');
+                btn.className = 'q-btn';
+                btn.innerText = ans.t;
+                btn.onclick = () => { code += ans.v; current++; load(); };
                 az.appendChild(btn);
             });
+        }
+
+        function showResult() {
+            document.getElementById('q-zone').style.display = 'none';
+            document.getElementById('res-zone').style.display = 'block';
+            
+            // 매칭 코드가 없을 경우 첫 글자와 두 번째 글자 조합으로 유사한 책 선택
+            const finalRes = results[code] || results[code.substring(0,2)+"XT"] || results["A1XS"];
+            
+            document.getElementById('res-title').innerText = finalRes.t;
+            document.getElementById('res-desc').innerText = finalRes.d;
+        }
+
+        load();
+    </script>
+</body>
+</html>
         }
         load();
     </script>
 </body>
-
 </html>
