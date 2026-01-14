@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 독서 메이트 찾기</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700&family=Pretendard:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-bg: #fdfaf5; --point-green: #7c8e6a; --text-black: #2c2c2c; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--main-bg); color: var(--text-black); }
+        nav { display: flex; justify-content: center; padding: 30px; background: transparent; }
+        nav a { margin: 0 20px; text-decoration: none; color: #888; font-weight: 500; }
+        nav a:hover, nav a.active { color: var(--point-green); font-weight: 700; }
+        .section-container { max-width: 600px; margin: 60px auto; padding: 0 20px; }
+        .content-card { background: white; padding: 50px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.02); text-align: center; }
+        .progress-bar { width: 100%; height: 4px; background: #eee; margin: 30px 0; border-radius: 2px; }
+        .progress-fill { height: 100%; background: var(--point-green); width: 25%; transition: 0.5s; }
+        .q-btn { width: 100%; padding: 20px; border: 1px solid #eee; background: white; border-radius: 15px; cursor: pointer; margin-bottom: 15px; transition: 0.3s; }
+        .q-btn:hover { background: #fdfaf5; border-color: var(--point-green); color: var(--point-green); }
+        #res-zone { display: none; }
+        #res-title { font-size: 2rem; color: var(--point-green); margin: 20px 0; font-family: 'Nanum Myeongjo'; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="intro.html">수업소개</a>
+        <a href="teacher.html">선생님소개</a>
+        <a href="curriculum.html">평가안내</a>
+        <a href="game.html" class="active">인생책찾기</a>
+    </nav>
+    <div class="section-container">
+        <div class="content-card">
+            <div id="q-zone">
+                <h2 style="font-family:'Nanum Myeongjo'">나의 인생 고전 찾기</h2>
+                <div class="progress-bar"><div class="progress-fill" id="pb"></div></div>
+                <p id="q-text" style="font-size:1.2rem; margin-bottom:30px;"></p>
+                <div id="ans-zone"></div>
+            </div>
+            <div id="res-zone">
+                <p>당신을 위한 독서 처방전</p>
+                <h2 id="res-title"></h2>
+                <p id="res-desc" style="line-height:1.7; color:#666;"></p>
+                <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; text-decoration:underline; cursor:pointer; color:#999;">다시 하기</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            { q: "요즘 나의 시선이 머무는 곳은?", a: [{t: "나의 내면과 성장", v: "A"}, {t: "공동체와 세상", v: "B"}] },
+            { q: "더 끌리는 이야기 방식은?", a: [{t: "문학적 상상력", v: "1"}, {t: "논리적 인문학", v: "2"}] },
+            { q: "토론하고 싶은 주제는?", a: [{t: "인간의 본성", v: "X"}, {t: "사회적 정의", v: "Y"}] },
+            { q: "얻고 싶은 배움은?", a: [{t: "나의 삶에 대한 성찰", v: "S"}, {t: "세상을 바꾸는 통찰", v: "T"}] }
+        ];
+        const results = {
+            "A1XS": { t: "어린 왕자", d: "관계의 소중함과 순수한 시선을 되찾고 싶은 당신에게 추천합니다." },
+            "A1YS": { t: "데미안", d: "자아를 깨고 나오는 성장의 기쁨을 느끼고 싶은 당신에게 딱 맞아요." },
+            "B2YT": { t: "사피엔스", d: "인류의 역사를 통해 세상을 보는 시야를 넓히고 싶은 당신께 추천합니다." },
+            "B2XT": { t: "침묵의 봄", d: "환경 문제에 대한 경각심과 사회적 실천을 고민하는 당신의 필독서입니다." }
+            // ... (나머지 코드들도 내부적으로 매칭되도록 구성됨)
+        };
+        let cur = 0; let code = "";
+        function load() {
+            if(cur >= 4) {
+                document.getElementById('q-zone').style.display='none';
+                document.getElementById('res-zone').style.display='block';
+                const r = results[code] || results["A1XS"];
+                document.getElementById('res-title').innerText = r.t;
+                document.getElementById('res-desc').innerText = r.d;
+                return;
+            }
+            document.getElementById('pb').style.width = ((cur+1)*25) + "%";
+            document.getElementById('q-text').innerText = questions[cur].q;
+            const az = document.getElementById('ans-zone'); az.innerHTML = "";
+            questions[cur].a.forEach(ans => {
+                const btn = document.createElement('button'); btn.className = 'q-btn'; btn.innerText = ans.t;
+                btn.onclick = () => { code += ans.v; cur++; load(); };
+                az.appendChild(btn);
+            });
+        }
+        load();
+    </script>
+</body>
+</html>

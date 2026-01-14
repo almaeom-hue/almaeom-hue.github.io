@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수업 소개 - 아람샘</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700&family=Pretendard:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-bg: #fdfaf5; --point-green: #7c8e6a; --text-black: #2c2c2c; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--main-bg); color: var(--text-black); }
+        nav { display: flex; justify-content: center; padding: 30px; background: transparent; }
+        nav a { margin: 0 20px; text-decoration: none; color: #888; font-weight: 500; }
+        nav a:hover, nav a.active { color: var(--point-green); font-weight: 700; }
+        .section-container { max-width: 800px; margin: 60px auto; padding: 0 20px; animation: fadeIn 1s; }
+        .content-card { background: white; padding: 50px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.02); line-height: 1.9; }
+        .highlight { color: #7c8e6a; font-weight: 700; border-bottom: 2px solid #e2e8d8; }
+        h2 { font-family: 'Nanum Myeongjo', serif; font-size: 2.2rem; margin-bottom: 30px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="intro.html" class="active">수업소개</a>
+        <a href="teacher.html">선생님소개</a>
+        <a href="curriculum.html">평가안내</a>
+        <a href="game.html">인생책찾기</a>
+    </nav>
+    <div class="section-container">
+        <div class="content-card">
+            <h2>수업 소개</h2>
+            <p>우리 수업은 <span class="highlight">스스로 읽고, 함께 대화하며, 주체적으로 쓰는 활동</span>을 통해 삶과 세상을 이해하는 눈을 기릅니다.</p>
+            <p>단순한 지식 습득이 아닌 <span class="highlight">비판적 사고력과 협력적 의사소통</span>에 목적을 둔 융합 선택 과목으로, 여러분이 한 명의 성숙한 시민으로 성장하도록 돕습니다.</p>
+        </div>
+    </div>
+</body>
+</html>
